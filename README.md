@@ -1,4 +1,4 @@
-# PocoOptimize
+        # PocoOptimize
 
 [![GitHub Stars](https://img.shields.io/github/stars/revanthsaii/PocoOptimize?style=flat-square)](https://github.com/revanthsaii/PocoOptimize)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -141,7 +141,7 @@ PocoOptimize/
 
 ## 📊 Performance Benchmarks
 
-### Device: Poco F6 (Qualcomm Snapdragon 8 Gen 2 Leading Version)
+### Device: Poco F6 (Qualcomm Snapdragon 8 Gen 3 Leading Version Leading Version)
 
 #### CPU Performance (AnTuTu)
 
@@ -321,10 +321,9 @@ MIT License - see [LICENSE](LICENSE) file
 
 - GitHub Issues: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues)
 - GitHub Discussions: [Ask questions](https://github.com/revanthsaii/PocoOptimize/discussions)
-- Email: support@pocooptimize.dev
-
+GitHub: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues) | [Discussions](https://github.com/revanthsaii/PocoOptimize/discussions)
 ---
 
 **Made with ❤️ by revanthsaii**
 
-Last Updated: December 2024
+Last Updated: December 2025
