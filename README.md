@@ -324,6 +324,6 @@ MIT License - see [LICENSE](LICENSE) file
 GitHub: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues) | [Discussions](https://github.com/revanthsaii/PocoOptimize/discussions)
 ---
 
-**Made with ❤️ by revanthsaii**
+**Made by Revanth Sai**
 
 Last Updated: December 2025
