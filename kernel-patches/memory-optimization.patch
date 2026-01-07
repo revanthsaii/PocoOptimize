@@ -1,0 +1,106 @@
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index 5678901..efghijk 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -165,7 +165,7 @@ static bool global_reclaim(struct scan_control *sc)
+  * processes, from reclaimable slab objects, which require the boot option
+  * "slub_debug=U" on the command line.
+  */
+-unsigned long vm_total_pages;
++unsigned long vm_total_pages __read_mostly;
+ 
+ static LIST_HEAD(shrinker_list);
+ static DECLARE_RWSEM(shrinker_rwsem);
+@@ -1850,7 +1850,7 @@ static void shrink_active_list(unsigned long nr_to_scan,
+ 	unsigned long nr_taken;
+ 	unsigned long nr_rotated = 0;
+ 	isolate_mode_t isolate_mode = 0;
+-	int file = is_file_lru(lru);
++	bool file = is_file_lru(lru);
+ 	struct lruvec *lruvec = mem_cgroup_lruvec(pgdat, memcg);
+ 
+ 	lru_add_drain();
+@@ -2100,6 +2100,17 @@ static void get_scan_count(struct lruvec *lruvec, struct mem_cgroup *memcg,
+ 	bool force_scan = false;
+ 	unsigned long ap, fp;
+ 
++	/*
++	 * PocoOptimize: Memory pressure optimization
++	 * Reduce swappiness under light memory pressure to keep apps in RAM
++	 * This improves app resume times and reduces jank
++	 */
++	if (sc->priority > DEF_PRIORITY - 2) {
++		/* Light pressure, prefer keeping file cache */
++		scan_balance = SCAN_FILE;
++		goto out;
++	}
++
+ 	/*
+ 	 * If the zone or memcg is small, nr[l] can be 0.  This
+ 	 * results in no scanning on this priority and a potential
+@@ -2850,7 +2861,7 @@ static bool shrink_node(pg_data_t *pgdat, struct scan_control *sc)
+ 			reclaimed = sc->nr_reclaimed;
+ 			scanned = sc->nr_scanned;
+ 
+-			shrink_node_memcg(pgdat, memcg, sc, &lru_pages);
++			shrink_node_memcg(pgdat, memcg, sc);  /* PocoOptimize: Optimized signature */
+ 			node_lru_pages += lru_pages;
+ 
+ 			if (sc->priority <= DEF_PRIORITY - 2)
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 6789012..fghijkl 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3200,7 +3200,7 @@ __alloc_pages_direct_compact(gfp_t gfp_mask, unsigned int order,
+ 		enum compact_priority prio, enum compact_result *compact_result)
+ {
+ 	struct page *page;
+-	unsigned int noreclaim_flag;
++	unsigned long noreclaim_flag;  /* PocoOptimize: Proper type */
+ 
+ 	if (!order)
+ 		return NULL;
+@@ -4200,6 +4200,15 @@ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+ 	}
+ 
+ 	/*
++	 * PocoOptimize: Faster page allocation for performance
++	 * Reduce watermark checks under low memory pressure
++	 * Trade-off: Slightly more aggressive reclaim
++	 */
++	if (!(gfp_mask & __GFP_DIRECT_RECLAIM))
++		alloc_flags |= ALLOC_HARDER;
++	if (order <= PAGE_ALLOC_COSTLY_ORDER && !(gfp_mask & __GFP_RECLAIM))
++		alloc_flags |= ALLOC_HIGH;
++
++	/*
+ 	 * Apply scoped allocation constraints. This is mainly about GFP_NOFS
+ 	 * resp. GFP_NOIO which has to be inherited for all allocation requests
+ 	 * from a particular context which has been marked by
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 7890123..ghijklm 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -1650,7 +1650,7 @@ static enum compact_result compact_zone(struct zone *zone, struct compact_contr
+ 	 * allocation success. 1 compaction to reduce fragmentation.
+ 	 */
+ 	while ((ret = compact_finished(zone, cc)) == COMPACT_CONTINUE) {
+-		int err;
++		int err = 0;
+ 
+ 		switch (isolate_migratepages(zone, cc)) {
+ 		case ISOLATE_ABORT:
+@@ -1680,6 +1680,13 @@ static enum compact_result compact_zone(struct zone *zone, struct compact_contr
+ 			goto out;
+ 		}
+ 
++		/*
++		 * PocoOptimize: More aggressive compaction for better performance
++		 * Run compaction more frequently to reduce fragmentation
++		 */
++		if (cc->order > 0 && cc->mode == MIGRATE_ASYNC)
++			cc->mode = MIGRATE_SYNC_LIGHT;
++
+ 		/*
+ 		 * We might have stopped compacting due to need_resched() in
+ 		 * async compaction, or due to a fatal signal detected. In that

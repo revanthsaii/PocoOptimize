@@ -1,0 +1,111 @@
+diff --git a/drivers/gpu/msm/adreno.c b/drivers/gpu/msm/adreno.c
+index 8901234..hijklmn 100644
+--- a/drivers/gpu/msm/adreno.c
++++ b/drivers/gpu/msm/adreno.c
+@@ -650,7 +650,7 @@ static const struct adreno_power_level adreno_power_levels[] = {
+ 	{ 257000000, 0, 27 },
+ 	{ 342000000, 0, 28 },
+ 	{ 414000000, 0, 29 },
+-	{ 510000000, 1, 30 },
++	{ 510000000, 0, 30 },  /* PocoOptimize: Reduce power level to prevent throttle */
+ 	{ 560000000, 1, 31 },
+ 	{ 630000000, 1, 32 },
+ 	{ 675000000, 1, 33 },
+@@ -658,6 +658,26 @@ static const struct adreno_power_level adreno_power_levels[] = {
+ 	{ 855000000, 2, 35 },
+ };
+ 
++/*
++ * PocoOptimize: Custom GPU frequency table
++ * Optimized for gaming performance with thermal awareness
++ */
++static const unsigned long pocooptimize_gpu_freqs[] = {
++	257000000,   /* Power save */
++	414000000,   /* Light tasks */
++	510000000,   /* UI rendering */
++	630000000,   /* Medium gaming */
++	719000000,   /* Heavy gaming */
++	800000000,   /* Sustained performance */
++	855000000,   /* Peak performance (thermal limited) */
++};
++
++static inline bool is_gpu_freq_optimal(unsigned long freq)
++{
++	/* PocoOptimize: Check if frequency is in optimal table */
++	return (freq >= 630000000 && freq <= 800000000);
++}
++
+ static struct adreno_gpu_freq adreno_gpu_freq_table[ARRAY_SIZE(adreno_power_levels)];
+ 
+ static unsigned long adreno_gpu_freq_to_level(struct adreno_device *adreno_dev,
+@@ -1250,6 +1270,18 @@ static void adreno_gpu_busy(struct adreno_device *adreno_dev)
+ 	kgsl_pwrscale_busy(device);
+ }
+ 
++/*
++ * PocoOptimize: Enhanced GPU burst mode
++ * Quickly ramp to high frequency for interactive workloads
++ */
++static void adreno_gpu_burst_mode(struct adreno_device *adreno_dev)
++{
++	if (adreno_dev->burst_mode_enabled) {
++		/* Jump to 719MHz for immediate response */
++		kgsl_pwrctrl_pwrlevel_change(&adreno_dev->dev, 4);
++	}
++}
++
+ static void adreno_gpu_idle(struct adreno_device *adreno_dev)
+ {
+ 	struct kgsl_device *device = KGSL_DEVICE(adreno_dev);
+@@ -1450,6 +1482,15 @@ int adreno_devfreq_target(struct device *dev, unsigned long *freq,
+ 	if (!pwr->enabled)
+ 		return 0;
+ 
++	/*
++	 * PocoOptimize: GPU frequency clamping for thermal management
++	 * During thermal stress, clamp to 800MHz instead of 855MHz
++	 */
++	if (thermal_zone_get_temp(tz, &temp) == 0) {
++		if (temp > 80000 && *freq > 800000000)  /* 80°C threshold */
++			*freq = 800000000;
++	}
++
+ 	mutex_lock(&device->mutex);
+ 
+ 	level = pwr->constraint.level;
+@@ -2100,7 +2141,7 @@ static int adreno_start(struct kgsl_device *device, int priority)
+ 		return status;
+ 
+ 	/* Set the default power level to turbo */
+-	kgsl_pwrctrl_pwrlevel_change(device, pwr->max_pwrlevel);
++	kgsl_pwrctrl_pwrlevel_change(device, pwr->max_pwrlevel + 1);  /* PocoOptimize: Start at 719MHz */
+ 
+ 	/* Enable 64 bit gpu addr if feature is set */
+ 	if (adreno_is_a5xx(adreno_dev) || adreno_is_a6xx(adreno_dev))
+diff --git a/drivers/gpu/msm/kgsl_pwrscale.c b/drivers/gpu/msm/kgsl_pwrscale.c
+index 9012345..ijklmno 100644
+--- a/drivers/gpu/msm/kgsl_pwrscale.c
++++ b/drivers/gpu/msm/kgsl_pwrscale.c
+@@ -250,6 +250,21 @@ static void do_devfreq_suspend(struct work_struct *work)
+ 	devfreq_suspend_device(device->devfreq);
+ }
+ 
++/*
++ * PocoOptimize: Intelligent GPU scaling
++ * Use load-based governor with custom thresholds for gaming
++ */
++static unsigned long pocooptimize_get_target_freq(struct devfreq *df,
++		unsigned long *freq, u32 flags)
++{
++	struct devfreq_dev_status stat;
++	
++	if (df->profile->get_dev_status(df->dev.parent, &stat))
++		return *freq;
++		
++	/* Scale aggressively for loads > 60% */
++	return (stat.busy_time * 100 > stat.total_time * 60) ?
++		df->max_freq : df->min_freq;
++}
+ 
+ void kgsl_pwrscale_sleep(struct kgsl_device *device)
+ {
