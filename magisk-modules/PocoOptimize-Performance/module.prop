@@ -1,0 +1,6 @@
+id=PocoOptimize-Performance
+name=PocoOptimize Performance
+version=v1.0.0
+versionCode=100
+author=Revanth Sai
+description=Advanced performance optimization module for Poco F6. Enhances CPU/GPU performance, gaming experience, and system responsiveness. Features custom governor tuning, memory optimization, and input latency reduction.

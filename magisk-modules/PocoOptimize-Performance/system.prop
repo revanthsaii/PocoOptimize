@@ -1,0 +1,55 @@
+# PocoOptimize Performance - System Properties
+# These properties are applied by Magisk at boot
+
+# Performance mode
+ro.performance.mode=1
+
+# Dalvik VM
+dalvik.vm.heapsize=512m
+dalvik.vm.heapgrowthlimit=256m
+dalvik.vm.heapmaxfree=8m
+dalvik.vm.heapminfree=2m
+dalvik.vm.heapstartsize=16m
+dalvik.vm.heaptargetutilization=0.75
+
+# Hardware rendering
+debug.hwui.renderer=skiagl
+debug.renderengine.backend=skiaglthreaded
+renderthread.skia.reduceopstasksplitting=true
+debug.sf.hw=1
+debug.egl.hw=1
+debug.composition.type=gpu
+
+# SurfaceFlinger
+debug.sf.early_phase_offset_ns=500000
+debug.sf.early_app_phase_offset_ns=500000
+debug.sf.use_phase_offsets_as_durations=1
+debug.sf.enable_gl_backpressure=1
+debug.sf.latch_unsignaled=1
+debug.sf.disable_backpressure=1
+
+# Memory & CPU
+sys.post_boot.cpu_set=0-7
+sys.use_speed_throttling=false
+ro.vendor.qti.sys.fw.bservice_enable=true
+
+# Gaming
+touch.pressure.scale=0.001
+debug.performance.tuning=1
+ro.min.fling_velocity=8000
+ro.max.fling_velocity=12000
+
+# Audio
+audio.deep_buffer.media=true
+audio.offload.video=true
+af.fast_track_multiplier=1
+
+# Display
+ro.surface_flinger.max_frame_buffer_acquired_buffers=3
+ro.surface_flinger.running_without_sync_framework=true
+
+# Disable overhead
+persist.sys.debug.multi_window=false
+debug.atrace.tags.enableflags=0
+persist.traced.enable=0
+sys.dalvik.vm.native.bridge=0
