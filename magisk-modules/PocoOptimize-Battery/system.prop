@@ -1,0 +1,81 @@
+# PocoOptimize Battery - System Properties
+
+# Power management
+pm.sleep_mode=1
+ro.ril.disable.power.collapse=0
+pm.power_profiles=1
+ro.config.hw_power_saving=true
+
+# Display refresh rate (60Hz for battery)
+ro.vendor.display.default_fps=60
+persist.vendor.display.adaptive_fps=true
+
+# WiFi power saving
+wifi.supplicant_scan_interval=180
+pm.sleep_mode=1
+
+# Mobile data optimization
+ro.ril.power_collapse=1
+persist.radio.add_power_save=1
+ro.com.android.dataroaming=false
+
+# CPU power management
+ro.vendor.qti.sys.fw.bservice_enable=true
+ro.vendor.qti.sys.fw.bservice_limit=60000
+ro.vendor.qti.sys.fw.bservice_age=5000
+sys.use_fifo_ui=0
+
+# Background apps limit
+ro.vendor.qti.sys.fw.bg_apps_limit=24
+sys.mem.max_hidden_apps=8
+ro.sys.fw.bg_apps_limit=24
+ro.config.max_starting_bg=8
+
+# Wake lock optimization
+ro.ril.wake_lock_timeout=300000
+
+# Sensor power saving
+ro.qti.sensors.max_geomag_rotvec=60
+ro.qti.sensors.max_gyro_rate=200
+ro.qti.sensors.max_accel_rate=200
+ro.qti.sensors.pam=false
+ro.qti.sensors.scrn_ortn=false
+ro.qti.sensors.smd=false
+
+# Bluetooth power
+persist.vendor.bt.a2dp.hal.implementation=true
+
+# Doze configuration
+ro.config.hw_QuickDoze_enable=true
+pm.dexopt.boot=verify
+pm.dexopt.install=speed-profile
+ro.vendor.config.hw_deepsleep=true
+
+# GPU power
+ro.vendor.gpu.power_mode=0
+
+# Audio power
+audio.offload.disable=0
+audio.offload.min.duration.secs=30
+audio.deep_buffer.media=true
+
+# Disable unnecessary services
+config.disable_consumerir=true
+ro.config.hw_eyes_protection=true
+
+# Thermal for battery
+persist.vendor.therm.profile=0
+
+# Vibration
+ro.config.vibrate_on_touch=false
+
+# Reduce logging
+persist.log.tag.stats_log=S
+ro.logd.size.stats=64K
+
+# Frame buffer
+ro.surface_flinger.max_frame_buffer_acquired_buffers=2
+
+# Memory management
+ro.config.fha_enable=true
+ro.config.dha_cached_max=8

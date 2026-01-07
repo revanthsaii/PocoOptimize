@@ -1,0 +1,6 @@
+id=PocoOptimize-Battery
+name=PocoOptimize Battery
+version=v1.0.0
+versionCode=100
+author=Revanth Sai
+description=Battery life optimization module for Poco F6. Implements aggressive doze mode, wake-lock management, background process control, and power-saving features. Estimated 25-35% battery improvement.
