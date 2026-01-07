@@ -7,6 +7,24 @@
 
 > Advanced Android system optimization framework for Poco F6. Scientific performance tweaking with modular architecture, kernel patches, battery optimization, and thermal management.
 
+## 🚀 Quick Start
+
+**Ready to optimize your Poco F6? Follow these 3 simple steps:**
+
+1. **Download** the module you want from [Releases](https://github.com/revanthsaii/PocoOptimize/releases)
+   - `PocoOptimize-Performance.zip` - For gaming & speed
+   - `PocoOptimize-Battery.zip` - For longer battery life
+   - `PocoOptimize-Thermal.zip` - For cooler device temps
+
+2. **Install** via Magisk Manager
+   - Open Magisk → Modules → Install from storage
+   - Select downloaded ZIP file
+   
+3. **Reboot** and enjoy! Check `/data/local/tmp/pocooptimize_*.log` for details
+
+> ⚠️ **Requirements**: Rooted Poco F6, Magisk 27.0+, Android 13+
+
+
 ## 📋 Table of Contents
 
 - [Features](#features)
@@ -295,17 +313,34 @@ Automated testing with GitHub Actions:
 - Benchmark automation
 - Release builds
 
-## 🤝 Contributing
+## ❓ Frequently Asked Questions (FAQ)
 
-Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md)
+### Q: Can I use multiple modules together?
+**A:** Yes! All modules are designed to work together. You can install Performance + Battery + Thermal for complete optimization.
 
-## ⚠️ Disclaimer
+### Q: Will this void my warranty?
+**A:** Rooting and modifying system properties may void your warranty. Use at your own risk and ensure you have backups.
 
-- Use at your own risk
-- May void device warranty
-- Backup your data before installation
-- Some optimizations may conflict with certain ROMs
-- Test in safe mode first
+### Q: Is this only for Poco F6?
+**A:** Primarily yes, but devices with Snapdragon 8 Gen 3 may benefit too. Run `build-scripts/test-compatibility.sh` to check.
+
+### Q: How do I uninstall?
+**A:** Simply disable or remove the module in Magisk Manager and reboot. All changes are reverted.
+
+### Q: My device feels slower/hotter after installing. What should I do?
+**A:** 
+- Check logs in `/data/local/tmp/pocooptimize_*.log`
+- Try disabling modules one by one to identify the issue
+- Report the issue on GitHub with your logs
+
+### Q: Can I customize the optimizations?
+**A:** Yes! Edit the `service.sh` files in each module before installing, or modify system property values in `system.prop`.
+
+### Q: Do these work with custom ROMs?
+**A:** Mostly yes, but compatibility varies. MIUI/HyperOS is primarily tested. Custom ROMs may need adjustments.
+
+### Q: How often should I run benchmarks?
+**A:** Before and after installation to measure improvements. Then weekly if you want to track performance over time.
 
 ## 📄 License
 
@@ -319,11 +354,10 @@ MIT License - see [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- GitHub Issues: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues)
-- GitHub Discussions: [Ask questions](https://github.com/revanthsaii/PocoOptimize/discussions)
-GitHub: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues) | [Discussions](https://github.com/revanthsaii/PocoOptimize/discussions)
+**GitHub Issues**: [Report bugs](https://github.com/revanthsaii/PocoOptimize/issues)  
+**GitHub Discussions**: [Ask questions](https://github.com/revanthsaii/PocoOptimize/discussions)
+
 ---
 
-**Made by Revanth Sai**
-
-Last Updated: Jan 2026
+**Made by Revanth Sai**  
+Last Updated: January 2026
