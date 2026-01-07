@@ -1,0 +1,6 @@
+id=PocoOptimize-Thermal
+name=PocoOptimize Thermal
+version=v1.0.0
+versionCode=100
+author=Revanth Sai
+description=Advanced thermal management module for Poco F6. Controls CPU/GPU throttling, reduces peak temperatures by 6-7°C during gaming/heavy loads. Features intelligent hotplug and graduated thermal response.
